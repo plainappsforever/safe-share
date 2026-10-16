@@ -1,0 +1,17 @@
+appId: ${APP_ID}
+name: Android Home says "no internet permission" (release build only; the manifest was checked with aapt)
+tags:
+  - p7
+  - android-only
+  - preview-only
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible:
+      id: home-screen
+    timeout: 90000
+- assertVisible: Nothing leaves your phone.
+- assertVisible:
+    id: privacy-line-android
+- assertVisible: Safe Share has no internet permission.

@@ -1,0 +1,19 @@
+# On the Result screen: Save, accept the one-sentence explanation and the iOS add-only prompt if they appear, wait for "Saved".
+appId: ${APP_ID}
+---
+- tapOn:
+    id: save
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - tapOn:
+          text: Continue
+          optional: true
+      - tapOn:
+          text: Allow
+          optional: true
+- extendedWaitUntil:
+    visible:
+      id: save-done
+    timeout: 30000

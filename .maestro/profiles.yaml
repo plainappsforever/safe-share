@@ -1,0 +1,60 @@
+appId: ${APP_ID}
+name: Location only keeps the date and time, and says what else is removed
+tags:
+  - p4
+---
+- runFlow:
+    file: subflows/open-files.yaml
+    env:
+      NAMES: photo.jpg
+- extendedWaitUntil:
+    visible:
+      id: inspect-screen
+    timeout: 60000
+# P8: the profile rows now start below the fold (longer descriptions); a tap on a row hidden behind the action bar was lost
+- scrollUntilVisible:
+    element:
+      id: profile-location
+    centerElement: true
+    timeout: 30000
+- tapOn:
+    id: profile-location
+- assertVisible:
+    id: profile-location
+    selected: true
+# Inspect plan: the date stays, the location goes
+- scrollUntilVisible:
+    element: "Date and time taken.*Kept by the profile you chose.*"
+    timeout: 90000
+- tapOn:
+    id: clean
+- extendedWaitUntil:
+    visible:
+      id: result-screen
+    timeout: 120000
+- assertVisible: Verified clean
+- assertVisible: Picture unchanged
+- assertVisible: Also removed, because they cannot be proven free of location.*
+- scrollUntilVisible:
+    element: "Date and time taken.*Kept by the profile you chose.*"
+    timeout: 90000
+# The choice is remembered (F3): reopen and the radio is still on "Location only"
+- tapOn:
+    id: done
+- runFlow:
+    file: subflows/open-files.yaml
+    env:
+      NAMES: photo.jpg
+- extendedWaitUntil:
+    visible:
+      id: inspect-screen
+    timeout: 60000
+- assertVisible:
+    id: profile-location
+    selected: true
+# restore the default for other flows
+- tapOn:
+    id: profile-all
+- assertVisible:
+    id: profile-all
+    selected: true

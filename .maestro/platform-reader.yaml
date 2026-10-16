@@ -1,0 +1,61 @@
+appId: ${APP_ID}
+name: Reader 3 - a value only the phone's own reader sees makes the copy Not fully clean (injected failure)
+tags:
+  - p6
+  - dev-only
+---
+# D44: Settings (development builds) -> "Test: phone reader reads the original" points reader 3 at the ORIGINAL while
+# readers 1 and 2 check the (clean) copy. The GPS the platform reader finds must turn the result red, name the field and
+# say that 1 of 4 checks found it. The switch lives in memory only: the launch at the end resets it.
+- runFlow: subflows/launch.yaml
+- tapOn:
+    id: open-settings
+- scrollUntilVisible:
+    element:
+      id: inject-platform-on
+    timeout: 90000
+- tapOn:
+    id: inject-platform-on
+- assertVisible:
+    id: inject-platform-on
+    selected: true
+- runFlow:
+    file: subflows/open-link.yaml
+    env:
+      NAMES: photo.jpg
+- extendedWaitUntil:
+    visible:
+      id: inspect-screen
+    timeout: 60000
+- tapOn:
+    id: profile-all
+- tapOn:
+    id: clean
+- extendedWaitUntil:
+    visible:
+      id: result-screen
+    timeout: 120000
+- assertVisible: Not fully clean
+# Every survivor line names the reader that found it: here only reader 3.
+- scrollUntilVisible:
+    element: "• Latitude — found by: phone's own reader \\((ImageIO|metadata-extractor)\\)"
+    timeout: 90000
+- assertNotVisible: ".*Latitude — found by: file structure.*"
+- scrollUntilVisible:
+    element:
+      id: readers-found
+    timeout: 90000
+- assertVisible:
+    id: readers-found
+    text: "1 of 4 checks found something left."
+- assertNotVisible: Verified clean
+- tapOn:
+    id: done
+# A new launch switches the injection off again; a normal clean is green with 4 checks.
+- runFlow:
+    file: subflows/clean-one.yaml
+    env:
+      NAMES: photo.jpg
+      PROFILE: all
+- assertVisible: Verified clean
+- assertVisible: "Checked 4 ways.*"

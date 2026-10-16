@@ -1,0 +1,39 @@
+appId: ${APP_ID}
+name: Settings - dark mode survives a restart
+tags:
+  - smoke
+---
+- runFlow: subflows/launch.yaml
+- tapOn:
+    id: open-settings
+- assertVisible:
+    id: settings-screen
+- scrollUntilVisible:
+    element:
+      id: theme-dark
+    timeout: 90000
+- tapOn:
+    id: theme-dark
+- assertVisible:
+    id: theme-dark
+    selected: true
+
+# Restart the app: the choice must still be there
+- stopApp
+- runFlow: subflows/launch.yaml
+- tapOn:
+    id: open-settings
+- scrollUntilVisible:
+    element:
+      id: theme-dark
+    timeout: 90000
+- assertVisible:
+    id: theme-dark
+    selected: true
+
+# Restore the default for the next flow
+- tapOn:
+    id: theme-system
+- assertVisible:
+    id: theme-system
+    selected: true

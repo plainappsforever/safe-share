@@ -1,0 +1,48 @@
+appId: ${APP_ID}
+name: Release (Android) - three photos shared at once from the Files app are cleaned as a batch
+tags:
+  - android-only
+  - preview-only
+  - release
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible:
+      id: home-screen
+    timeout: 90000
+- runFlow: ../subflows/files-open-pictures.yaml
+- longPressOn: ss-photo.jpg
+- tapOn: ss-photo.heic
+- tapOn: ss-extras.jpg
+- tapOn:
+    id: com.google.android.documentsui:id/action_menu_share
+- tapOn: Safe Share Preview
+- extendedWaitUntil:
+    visible:
+      id: batch-screen
+    timeout: 60000
+- extendedWaitUntil:
+    visible:
+      id: clean-all
+    timeout: 60000
+- tapOn:
+    id: profile-all
+- tapOn:
+    id: clean-all
+- extendedWaitUntil:
+    visible: 3 verified clean
+    timeout: 120000
+- tapOn:
+    id: row-ss-photo.heic
+- extendedWaitUntil:
+    visible:
+      id: result-screen
+    timeout: 20000
+- assertVisible: Verified clean
+- tapOn:
+    id: done
+- tapOn:
+    id: batch-done
+- assertVisible:
+    id: home-screen

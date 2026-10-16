@@ -1,0 +1,54 @@
+appId: ${APP_ID}
+name: iOS - Photos & videos opens PHPicker; a HEIC photo and a video arrive as originals (Batch)
+tags:
+  - ios-only
+  - share-in
+---
+# Needs scripts/share-in.sh (adds test/fixtures/photo.heic and gps.mov to the simulator's Photos). PHPicker runs out of
+# process and needs no permission. The script then pulls work/*/in/* and compares them byte for byte with the fixtures
+# (A7: HEIC stays HEIC, the video is not transcoded). Do not add a flow after this one: it leaves the files on the Batch
+# screen for the pull.
+- runFlow: ../subflows/launch.yaml
+- tapOn:
+    id: pick-photos
+- scrollUntilVisible:
+    element: "Photo, 14. June 2025, 09:30"
+    direction: UP
+    timeout: 20000
+    optional: true
+- scrollUntilVisible:
+    element: "Photo, 14. June 2025, 09:30"
+    direction: DOWN
+    timeout: 20000
+    optional: true
+- tapOn: "Photo, 14. June 2025, 09:30"
+- scrollUntilVisible:
+    element: "Video, two seconds, 14. June 2025, 09:30"
+    direction: UP
+    timeout: 20000
+    optional: true
+- scrollUntilVisible:
+    element: "Video, two seconds, 14. June 2025, 09:30"
+    direction: DOWN
+    timeout: 20000
+    optional: true
+- tapOn: "Video, two seconds, 14. June 2025, 09:30"
+- tapOn: Done
+- extendedWaitUntil:
+    visible:
+      id: batch-screen
+    timeout: 60000
+- extendedWaitUntil:
+    visible:
+      id: clean-all
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: "row-.*\\.heic"
+    timeout: 90000
+- scrollUntilVisible:
+    element:
+      id: "row-.*\\.mov"
+    timeout: 90000
+- assertNotVisible:
+    id: "row-.*\\.(jpe?g|mp4)"

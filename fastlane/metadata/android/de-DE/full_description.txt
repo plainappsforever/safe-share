@@ -1,0 +1,36 @@
+Bevor du ein Foto, ein Video oder ein PDF verschickst, zeigt Safe Share dir, was die Datei heimlich über dich verrät, entfernt es und liest die Kopie zur Kontrolle noch einmal. Danach gibt es die saubere Kopie an die App weiter, mit der du sie verschicken wolltest.
+
+Kein Konto. Keine Werbung. Kein Abo. Funktioniert offline: Die App hat keine Internet-Berechtigung.
+
+SO GEHT'S
+1. Teile eine Datei im Teilen-Menü einer anderen App mit Safe Share oder wähle Dateien in Safe Share aus. Eine Datei oder viele.
+2. Sieh, was sie über dich verrät: genauer Standort, Handymodell und Seriennummer, Aufnahmezeitpunkt, dein Name oder Copyright, die Bearbeitungs-App, versteckte Vorschaubilder. Technische Namen stehen darunter.
+3. Tippe auf „Clean & share“. Safe Share schreibt eine neue Kopie, prüft sie und öffnet bei bestandener Prüfung das Teilen-Menü.
+Dein Original bleibt unverändert: Safe Share schreibt nur eine neue Kopie.
+
+WAS ES KANN
+Fotos: JPEG, PNG, WebP, HEIC/HEIF und AVIF. Videos: MP4, M4V und MOV. Dokumente: PDF. Alles andere heißt „Not supported yet — not changed“ und wird nie als sauber bezeichnet.
+Bild, Video, Ton und PDF-Seiten werden unverändert übernommen: nichts wird neu komprimiert, verkleinert oder neu gezeichnet. Drei Profile: „Remove everything“ (Standard), „Location only“ und „Keep camera settings“.
+
+GEPRÜFT, NICHT NUR BEHAUPTET
+Nach dem Bereinigen liest Safe Share die Kopie bis zu viermal neu: Dateistruktur, Byte-Suche nach jedem entfernten Wert, ein getrennter Scan nach bekannten Arten versteckter Daten und der eigene Leser des Handys. Unter Android liest er Fotos und Videos, keine PDFs; das Ergebnis sagt es. „Verified clean“ steht nur da, wenn keine Prüfung etwas Übriges fand. Ist etwas übrig, steht „Not fully clean“ und was. Kann eine Prüfung nicht laufen, steht „Could not verify“.
+
+VIELE DATEIEN AUF EINMAL
+Bereinige einen ganzen Stapel mit Fortschrittsbalken und Abbrechen. Eine kaputte Datei stoppt die anderen nicht; am Ende zählt eine Zusammenfassung.
+
+SPEICHERN ODER TEILEN
+Teile die saubere Kopie direkt aus dem Ergebnis. Ab Android 10 kannst du sie auch speichern: Fotos nach Pictures/Safe Share, Videos nach Movies/Safe Share, PDFs nach Download/Safe Share. Kopien bekommen einen neutralen Namen (photo-4K7Q.jpg), weil Kameranamen Datum und Uhrzeit enthalten; die Originalnamen sind in den Einstellungen wählbar.
+
+GUT ZU WISSEN
+- Safe Share bereinigt, was neben dem Bild gespeichert ist, nicht was es zeigt: Gesichter, Hausnummern, Nummernschilder, Spiegelungen. Unsichtbare Wasserzeichen sucht es nicht.
+- Fotos mit HDR-Helligkeitsdaten (Ultra HDR) verlieren diese Daten und können etwas dunkler wirken. Motion Photos verlieren ihr kurzes Video. Das Ergebnis sagt dir, wann das zutrifft.
+- In Videos werden versteckte Daten mit Nullen überschrieben, die Dateigröße bleibt gleich. Daten in den Video- und Tonspuren selbst (z. B. Timecode) werden nicht untersucht.
+- In PDFs können frühere gespeicherte Fassungen der Datei erhalten bleiben; das Ergebnis sagt es. Kommentarautoren, Dateianhänge, Formularfelder und Signaturen werden gemeldet, nicht entfernt („Not fully clean“).
+- Fotos aus der Android-Fotoauswahl kommen ohne Standort an (Android-Regel); Safe Share bietet „Dateien“ als Weg an.
+- Die Kopie ist eine neue Datei mit dem heutigen Datum.
+- Manche Apps entfernen beim Senden selbst einiges, aber darauf ist kein Verlass; die Einstellungen erklären es.
+
+DATENSCHUTZ
+Alles geschieht auf deinem Handy. Nichts wird hochgeladen. Kein Konto, keine Werbung, keine Analyse, keine Absturzberichte, kein Tracking. Kopien sind vorübergehend: Sie werden gelöscht, wenn du das Ergebnis verlässt, und bei jedem Start. Kein Verlauf deiner Dateien, nur Einstellungen. „Show on map“ öffnet auf Tipp deine Karten-App mit den Koordinaten; „Teilen“ gibt die Kopie an die App deiner Wahl, die nach ihren eigenen Regeln arbeitet.
+
+Benötigt Android 7.0 oder neuer. Die App ist auf Englisch; die Namen in Anführungszeichen stehen so in der App.

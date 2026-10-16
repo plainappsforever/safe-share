@@ -1,0 +1,63 @@
+appId: ${APP_ID}
+name: Release (iOS) - a photo shared from Photos reaches Safe Share (extension), Clean & share opens the share sheet
+tags:
+  - ios-only
+  - preview-only
+  - release
+---
+# The Release build has no debug link: the app must be launched once, then Photos -> Share -> Safe Share Preview.
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible:
+      id: home-screen
+    timeout: 90000
+- launchApp:
+    appId: com.apple.mobileslideshow
+    stopApp: true
+- tapOn:
+    text: Continue
+    optional: true
+- tapOn:
+    text: "Don’t Allow"
+    optional: true
+- runFlow:
+    when:
+      notVisible: Library
+    commands:
+      - tapOn:
+          text: Back
+          optional: true
+- tapOn:
+    text: Close
+    optional: true
+- waitForAnimationToEnd
+- scrollUntilVisible:
+    element: "Photo, 14. June 2025, 09:30"
+    direction: UP
+    centerElement: true
+    timeout: 90000
+- tapOn:
+    text: "Photo, 14. June 2025, 09:30"
+    retryTapIfNoChange: true
+- extendedWaitUntil:
+    visible: Share
+    timeout: 15000
+- tapOn: Share
+- tapOn: Safe Share Preview
+- extendedWaitUntil:
+    visible:
+      id: inspect-screen
+    timeout: 60000
+- assertVisible:
+    id: inspect-meta
+    text: "HEIC photo.*"
+- assertVisible:
+    id: finding-location
+    text: Exact location
+- tapOn:
+    id: clean-share
+- extendedWaitUntil:
+    visible: Copy
+    timeout: 60000
+- assertVisible: "photo-[A-Z0-9]{4}"

@@ -1,0 +1,24 @@
+plugins {
+  id 'com.android.library'
+  id 'expo-module-gradle-plugin'
+}
+
+group = 'expo.modules.safesharenative'
+version = '0.1.0'
+
+android {
+  namespace "expo.modules.safesharenative"
+  defaultConfig {
+    versionCode 1
+    versionName "0.1.0"
+    consumerProguardFiles "consumer-rules.pro"
+  }
+  lintOptions {
+    abortOnError false
+  }
+}
+
+dependencies {
+  // Independent metadata reader used only to VERIFY cleaned copies (D11 reader 3; V1_PLAN pinned additions, Apache-2.0).
+  implementation 'com.drewnoakes:metadata-extractor:2.21.0'
+}

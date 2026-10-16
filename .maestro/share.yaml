@@ -1,0 +1,35 @@
+appId: ${APP_ID}
+name: Clean and share goes from Inspect to the share sheet in one tap
+tags:
+  - p4
+---
+- runFlow:
+    file: subflows/open-files.yaml
+    env:
+      NAMES: photo.jpg
+- extendedWaitUntil:
+    visible:
+      id: inspect-screen
+    timeout: 60000
+- tapOn:
+    id: profile-all
+# A9: one tap
+- tapOn:
+    id: clean-share
+# The system share sheet now covers the app, so its own content is what can be seen. It carries the NEUTRAL name (D18),
+# never IMG_/date names: photo-XXXX.jpg. iOS shows its action row ("Copy"); Android its chooser.
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - extendedWaitUntil:
+          visible: Copy
+          timeout: 60000
+      - assertVisible: "photo-[A-Z0-9]{4}"
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - extendedWaitUntil:
+          visible: Sharing image
+          timeout: 60000

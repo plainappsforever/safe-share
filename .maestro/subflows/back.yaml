@@ -1,0 +1,15 @@
+# Goes back one screen: the Android system back, or the iOS edge swipe (the header's back label differs between iOS versions).
+appId: ${APP_ID}
+---
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - back
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - swipe:
+          start: 1%, 50%
+          end: 80%, 50%

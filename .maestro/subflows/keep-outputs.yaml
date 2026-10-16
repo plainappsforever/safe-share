@@ -1,0 +1,16 @@
+# Env: VALUE = on | off. Sets the developer "Keep outputs" switch through the UI (development variant only).
+appId: ${APP_ID}
+---
+- tapOn:
+    id: open-settings
+- assertVisible:
+    id: settings-screen
+- scrollUntilVisible:
+    element:
+      id: keep-outputs-${VALUE}
+    timeout: 90000
+- tapOn:
+    id: keep-outputs-${VALUE}
+- assertVisible:
+    id: keep-outputs-${VALUE}
+    selected: true

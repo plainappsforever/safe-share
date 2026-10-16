@@ -1,0 +1,25 @@
+appId: ${APP_ID}
+name: Done deletes the cleaned copy (work folder empty)
+tags:
+  - p4
+---
+- runFlow: subflows/launch.yaml
+- runFlow:
+    file: subflows/keep-outputs.yaml
+    env:
+      VALUE: "off"
+- runFlow:
+    file: subflows/clean-one.yaml
+    env:
+      NAMES: photo.jpg
+      PROFILE: all
+- assertVisible: Verified clean
+- tapOn:
+    id: done
+- assertVisible:
+    id: home-screen
+- extendedWaitUntil:
+    visible:
+      id: work-count
+    timeout: 10000
+- assertVisible: "work: 0 files"

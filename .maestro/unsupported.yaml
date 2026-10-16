@@ -1,0 +1,71 @@
+appId: ${APP_ID}
+name: Unsupported, damaged and password-protected files are declined and never called clean
+tags:
+  - p4
+---
+- runFlow:
+    file: subflows/open-files.yaml
+    env:
+      NAMES: voice.m4a
+- extendedWaitUntil:
+    visible:
+      id: inspect-declined
+    timeout: 60000
+- assertVisible: Not supported yet — not changed
+- assertNotVisible:
+    id: clean-share
+- assertNotVisible: Verified clean
+
+- runFlow:
+    file: subflows/open-files.yaml
+    env:
+      NAMES: corrupt.jpg
+- extendedWaitUntil:
+    visible:
+      id: inspect-declined
+    timeout: 60000
+- assertVisible: Could not be read — not changed
+- assertNotVisible:
+    id: clean
+- assertNotVisible: Verified clean
+
+- runFlow:
+    file: subflows/open-files.yaml
+    env:
+      NAMES: encrypted.pdf
+- extendedWaitUntil:
+    visible:
+      id: inspect-declined
+    timeout: 60000
+- assertVisible: Not supported yet — not changed
+- assertVisible: This PDF is password-protected.*
+- assertNotVisible:
+    id: clean-share
+- assertNotVisible: Verified clean
+
+# P7: a file of 0 bytes and a text file are named for what they are, never "clean", no copy.
+- runFlow:
+    file: subflows/open-files.yaml
+    env:
+      NAMES: empty.jpg
+- extendedWaitUntil:
+    visible:
+      id: inspect-declined
+    timeout: 60000
+- assertVisible: This file is empty.*
+- assertNotVisible:
+    id: clean-share
+- assertNotVisible: Verified clean
+
+- runFlow:
+    file: subflows/open-files.yaml
+    env:
+      NAMES: notes.txt
+- extendedWaitUntil:
+    visible:
+      id: inspect-declined
+    timeout: 60000
+- assertVisible: Not supported yet — not changed
+- assertNotVisible:
+    id: clean-share
+- assertNotVisible: Verified clean

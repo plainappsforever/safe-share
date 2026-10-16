@@ -1,0 +1,29 @@
+appId: ${APP_ID}
+name: Android - three photos shared at once (SEND_MULTIPLE) open Batch with 3 files
+tags:
+  - android-only
+  - share-in
+---
+- runFlow: ../subflows/launch.yaml
+- runFlow: ../subflows/files-open-pictures.yaml
+- longPressOn: ss-photo.jpg
+- tapOn: ss-photo.heic
+- tapOn: ss-extras.jpg
+- tapOn:
+    id: com.google.android.documentsui:id/action_menu_share
+- tapOn: Safe Share Dev
+- extendedWaitUntil:
+    visible:
+      id: batch-screen
+    timeout: 60000
+- extendedWaitUntil:
+    visible:
+      id: clean-all
+    timeout: 60000
+- tapOn:
+    id: profile-all
+- tapOn:
+    id: clean-all
+- extendedWaitUntil:
+    visible: 3 verified clean
+    timeout: 120000

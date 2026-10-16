@@ -1,0 +1,27 @@
+# NOT part of the normal suite (run by hand): timings of a 300 MiB MP4 and an 8.6 MB JPEG on the device.
+# Push them first: scripts/push-fixtures.sh <platform> <scratch>/big300.mp4 <scratch>/big.jpg (made with make-big-mp4.mjs and sips), then
+# scripts/e2e.sh <platform> development .maestro/subflows/big-files.yaml and scripts/pull-outputs.sh <platform>.
+appId: ${APP_ID}
+name: Big files (manual)
+---
+- runFlow: launch.yaml
+- runFlow:
+    file: keep-outputs.yaml
+    env:
+      VALUE: "on"
+- runFlow:
+    file: clean-more.yaml
+    env:
+      NAMES: big.jpg
+      PROFILE: all
+- assertVisible: Verified clean
+- tapOn:
+    id: done
+- runFlow:
+    file: clean-more.yaml
+    env:
+      NAMES: big300.mp4
+      PROFILE: all
+- assertVisible: Verified clean
+- tapOn:
+    id: done

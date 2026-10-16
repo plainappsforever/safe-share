@@ -1,0 +1,68 @@
+appId: ${APP_ID}
+name: Save puts the cleaned photo and video in Photos (iOS) or Pictures / Movies / Download Safe Share (Android)
+tags:
+  - p5
+---
+# scripts/share-in.sh then compares the saved files byte for byte with the cleaned copies (Keep outputs keeps them).
+- runFlow: subflows/launch.yaml
+- runFlow:
+    file: subflows/keep-outputs.yaml
+    env:
+      VALUE: "on"
+- runFlow:
+    file: subflows/clean-one.yaml
+    env:
+      NAMES: photo.jpg
+      PROFILE: all
+- assertVisible: Verified clean
+- runFlow: subflows/save-result.yaml
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - assertVisible: Saved to Pictures/Safe Share.
+# Second file without a relaunch (a launch would wipe the first cleaned copy that the script compares).
+- runFlow:
+    file: subflows/open-link.yaml
+    env:
+      NAMES: gps.mov
+- extendedWaitUntil:
+    visible:
+      id: inspect-screen
+    timeout: 60000
+- tapOn:
+    id: profile-all
+- tapOn:
+    id: clean
+- extendedWaitUntil:
+    visible:
+      id: result-screen
+    timeout: 120000
+- assertVisible: Verified clean
+- runFlow: subflows/save-result.yaml
+# P6 (P5-4): videos go to Movies, PDFs to Download (MediaStore, no permission) on Android.
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - assertVisible: Saved to Movies/Safe Share.
+      - runFlow:
+          file: subflows/open-link.yaml
+          env:
+            NAMES: doc.pdf
+      - extendedWaitUntil:
+          visible:
+            id: inspect-screen
+          timeout: 60000
+      - tapOn:
+          id: profile-all
+      - tapOn:
+          id: clean
+      - extendedWaitUntil:
+          visible:
+            id: result-screen
+          timeout: 120000
+      - assertVisible: Verified clean
+      - assertVisible: Save to Downloads
+      - runFlow: subflows/save-result.yaml
+      - assertVisible: Saved to Download/Safe Share.

@@ -1,0 +1,54 @@
+appId: ${APP_ID}
+name: Android - a picker photo has its GPS blanked; "Choose it in Files" brings the original with its location (A7)
+tags:
+  - android-only
+  - share-in
+---
+# The photo picker zeroes the GPS values whatever permission the app holds, and Android refuses requireOriginal on
+# picker URIs ("Require Original is not supported for Picker URI", V1_LOG P6). Inspect must say so, ask for no
+# permission, and offer the Files picker, which hands over the original bytes (ss-photo.jpg from scripts/share-in.sh).
+- runFlow: ../subflows/launch.yaml
+- tapOn:
+    id: pick-photos
+# Newer items (e.g. what save.yaml saved) come first: scroll to the fixture's capture date.
+- scrollUntilVisible:
+    element: "Photo taken on Jun 14, 2025.*"
+    timeout: 20000
+- tapOn: "Photo taken on Jun 14, 2025.*"
+- tapOn: Done
+- extendedWaitUntil:
+    visible:
+      id: inspect-screen
+    timeout: 60000
+- assertNotVisible: Exact location
+- assertVisible:
+    id: location-hidden
+- assertVisible:
+    id: location-hidden-hint
+- assertNotVisible:
+    id: show-original-location
+- assertNotVisible: Allow
+- scrollUntilVisible:
+    element:
+      id: pick-in-files
+    timeout: 90000
+- tapOn:
+    id: pick-in-files
+# The Files picker opens at Recent, where scripts/share-in.sh's ss-photo.jpg is listed.
+- scrollUntilVisible:
+    element: ss-photo.jpg
+    timeout: 20000
+- tapOn: ss-photo.jpg
+- tapOn:
+    text: Select
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: inspect-screen
+    timeout: 60000
+- assertVisible:
+    id: finding-location
+    text: Exact location
+- assertNotVisible:
+    id: location-hidden
+- assertNotVisible: Allow

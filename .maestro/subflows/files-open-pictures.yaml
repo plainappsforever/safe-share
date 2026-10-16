@@ -1,0 +1,15 @@
+# Android Files app (DocumentsUI) at Images > Pictures, where scripts/share-in.sh put the ss-* photos.
+appId: com.google.android.documentsui
+---
+- launchApp:
+    appId: com.google.android.documentsui
+    stopApp: true
+- tapOn: Show roots
+- tapOn: Images
+- extendedWaitUntil:
+    visible: Pictures
+    timeout: 15000
+- tapOn: Pictures
+- extendedWaitUntil:
+    visible: ss-photo.jpg
+    timeout: 15000

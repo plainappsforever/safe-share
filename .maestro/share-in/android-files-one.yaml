@@ -1,0 +1,29 @@
+appId: ${APP_ID}
+name: Android - one photo shared from the Files app opens Inspect with its original location
+tags:
+  - android-only
+  - share-in
+---
+# Needs scripts/share-in.sh (pushes ss-photo.jpg, ss-photo.heic, ss-extras.jpg to /sdcard/Pictures and scans them).
+# The app runs first: a development build only routes the share link once its bundle is loaded.
+- runFlow: ../subflows/launch.yaml
+- runFlow: ../subflows/files-open-pictures.yaml
+- longPressOn: ss-photo.jpg
+- tapOn:
+    id: com.google.android.documentsui:id/action_menu_share
+- tapOn: Safe Share Dev
+- extendedWaitUntil:
+    visible:
+      id: inspect-screen
+    timeout: 60000
+# The Files app hands over the original bytes: the GPS position is there, nothing is hidden, no permission prompt.
+- assertVisible:
+    id: finding-location
+    text: Exact location
+# P6 (P5-5): the provider's display name, not its id.
+- assertVisible: ss-photo.jpg
+- assertNotVisible:
+    id: location-hidden
+- assertNotVisible: Allow
+- assertVisible:
+    id: clean-share

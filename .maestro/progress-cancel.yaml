@@ -1,0 +1,57 @@
+appId: ${APP_ID}
+name: Cancel while cleaning stops the clean and keeps nothing (progress bar, slowed-down check)
+tags:
+  - p7
+  - dev-only
+---
+# P4-6 / A10: the progress bar is on screen while the readers check the copy, and Cancel works at any moment.
+# "Test: slow down the clean" makes every chunk of the check wait ~3 s so a small fixture can be cancelled by hand.
+- runFlow: subflows/launch.yaml
+- runFlow:
+    file: subflows/keep-outputs.yaml
+    env:
+      VALUE: "on"
+- scrollUntilVisible:
+    element:
+      id: inject-slow-on
+    timeout: 90000
+- tapOn:
+    id: inject-slow-on
+- assertVisible:
+    id: inject-slow-on
+    selected: true
+- runFlow:
+    file: subflows/open-link.yaml
+    env:
+      NAMES: photo.jpg
+- extendedWaitUntil:
+    visible:
+      id: inspect-screen
+    timeout: 60000
+- tapOn:
+    id: profile-all
+- tapOn:
+    id: clean
+- extendedWaitUntil:
+    visible:
+      id: clean-progress
+    timeout: 30000
+- assertVisible:
+    id: cancel-clean
+- extendedWaitUntil:
+    visible: "Checking the copy… \\d+ %"
+    timeout: 30000
+- tapOn:
+    id: cancel-clean
+# Back on Inspect, told plainly, no result screen, and the buttons are back.
+- extendedWaitUntil:
+    visible:
+      id: cancelled-note
+    timeout: 30000
+- assertVisible: Cancelled. Nothing was kept.
+- assertNotVisible:
+    id: result-screen
+- assertVisible:
+    id: clean-share
+- assertNotVisible:
+    id: clean-progress

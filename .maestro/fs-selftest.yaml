@@ -1,0 +1,15 @@
+appId: ${APP_ID}
+name: FS self-test writes 10 bytes at offset 5 and reads them back
+tags:
+  - smoke
+  - dev-only # the button exists in the development variant only
+---
+- runFlow: subflows/launch.yaml
+- tapOn:
+    id: fs-selftest
+- extendedWaitUntil:
+    visible:
+      id: fs-selftest-result
+    timeout: 10000
+- assertVisible: FS OK
+- assertVisible: ENGINE OK # the engine bundle loads and runs a tiny JPEG in Hermes

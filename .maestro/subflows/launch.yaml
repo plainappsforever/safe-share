@@ -1,0 +1,15 @@
+appId: ${APP_ID}
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible:
+      id: home-screen
+    timeout: 90000
+# Dev builds show "work: N files" once Home's first effect has run: the router is ready then, so a deep link sent right
+# after launch is not lost (P7: on Android a link sent at once after the first paint was sometimes dropped).
+- extendedWaitUntil:
+    visible:
+      id: work-count
+    timeout: 30000
+    optional: true

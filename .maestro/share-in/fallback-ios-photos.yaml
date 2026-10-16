@@ -1,0 +1,52 @@
+appId: ${APP_ID}
+name: iOS fallback build (SHARE_OPEN_APP=0) - the extension saves, says so, and the app picks the photo up when opened
+tags:
+  - ios-only
+  - share-fallback
+---
+# Only for a build made with SHARE_OPEN_APP=0 (scripts/share-in.sh does not run it). D41 / R2.
+- runFlow: ../subflows/launch.yaml
+- launchApp:
+    appId: com.apple.mobileslideshow
+    stopApp: true
+- tapOn:
+    text: Continue
+    optional: true
+- tapOn:
+    text: "Don’t Allow"
+    optional: true
+- runFlow:
+    when:
+      notVisible: Library
+    commands:
+      - tapOn:
+          text: Back
+          optional: true
+- tapOn:
+    text: Close
+    optional: true
+- scrollUntilVisible:
+    element: "Photo, 14. June 2025, 09:30"
+    direction: UP
+    centerElement: true
+    timeout: 90000
+- tapOn:
+    text: "Photo, 14. June 2025, 09:30"
+    retryTapIfNoChange: true
+- tapOn: Share
+- tapOn: Safe Share Dev
+# The extension stays: saved, open the app yourself.
+- extendedWaitUntil:
+    visible: "Saved. Open Safe Share Dev to check and clean it."
+    timeout: 30000
+- tapOn: Done
+# Opening the app (not by a link) picks the saved photo up.
+- launchApp:
+    appId: ${APP_ID}
+- extendedWaitUntil:
+    visible:
+      id: inspect-screen
+    timeout: 60000
+- assertVisible:
+    id: inspect-meta
+    text: "HEIC photo.*"

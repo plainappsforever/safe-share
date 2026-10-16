@@ -1,0 +1,33 @@
+appId: ${APP_ID}
+name: Batch - Clean all & share opens ONE share sheet with all three verified clean copies
+tags:
+  - p6
+---
+- runFlow:
+    file: subflows/open-files.yaml
+    env:
+      NAMES: photo.jpg,photo.heic,gps.mov
+- extendedWaitUntil:
+    visible:
+      id: clean-all-share
+    timeout: 120000
+- tapOn:
+    id: profile-all
+- tapOn:
+    id: clean-all-share
+# One sheet for all three copies (iOS names the count in its Save action; Android's chooser header). The chooser is the
+# system's: V1_LOG also records `dumpsys activity activities` = CHOOSER with a 3-item clip.
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - extendedWaitUntil:
+          visible: Save 3 Items
+          timeout: 60000
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - extendedWaitUntil:
+          visible: Sharing 3 files
+          timeout: 60000

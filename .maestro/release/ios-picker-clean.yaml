@@ -1,0 +1,67 @@
+appId: ${APP_ID}
+name: Release (iOS) - a HEIC photo from the system picker is cleaned, verified by 4 checks and saved to Photos
+tags:
+  - ios-only
+  - preview-only
+  - release
+---
+# Run on the preview (Release) build: scripts/e2e.sh ios preview .maestro/release/ios-picker-clean.yaml
+# Needs test/fixtures/photo.heic in the simulator's Photos (xcrun simctl addmedia, as scripts/share-in.sh).
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible:
+      id: home-screen
+    timeout: 90000
+- assertVisible: Nothing leaves your phone.
+- assertNotVisible: Allow
+- tapOn:
+    id: pick-photos
+- scrollUntilVisible:
+    element: "Photo, 14. June 2025, 09:30"
+    direction: UP
+    timeout: 20000
+    optional: true
+- scrollUntilVisible:
+    element: "Photo, 14. June 2025, 09:30"
+    direction: DOWN
+    timeout: 20000
+    optional: true
+- tapOn: "Photo, 14. June 2025, 09:30"
+- tapOn: Done
+- extendedWaitUntil:
+    visible:
+      id: inspect-screen
+    timeout: 60000
+- assertVisible:
+    id: finding-location
+    text: Exact location
+- scrollUntilVisible:
+    element:
+      id: profile-all
+- tapOn:
+    id: profile-all
+- tapOn:
+    id: clean
+- extendedWaitUntil:
+    visible:
+      id: result-screen
+    timeout: 120000
+- assertVisible: Verified clean
+- assertVisible: "Checked 4 ways: .*"
+- tapOn:
+    id: save
+- tapOn:
+    text: Continue
+    optional: true
+- tapOn:
+    text: Allow
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: save-done
+    timeout: 30000
+- tapOn:
+    id: done
+- assertVisible:
+    id: home-screen

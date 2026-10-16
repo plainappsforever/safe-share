@@ -1,0 +1,50 @@
+appId: ${APP_ID}
+name: HEIC, MOV, MP4 and PDF go through the whole flow to Verified clean
+tags:
+  - p4
+---
+- runFlow: subflows/launch.yaml
+- runFlow:
+    file: subflows/keep-outputs.yaml
+    env:
+      VALUE: "on"
+- runFlow:
+    file: subflows/clean-more.yaml
+    env:
+      NAMES: photo.heic
+      PROFILE: all
+- assertVisible: Verified clean
+- assertVisible: Picture unchanged
+- tapOn:
+    id: done
+- runFlow:
+    file: subflows/clean-more.yaml
+    env:
+      NAMES: gps.mov
+      PROFILE: all
+- assertVisible: Verified clean
+- assertVisible: Video and sound unchanged
+- tapOn:
+    id: done
+- runFlow:
+    file: subflows/clean-more.yaml
+    env:
+      NAMES: gps.mp4
+      PROFILE: location
+- assertVisible: Verified clean
+- assertVisible: Video and sound unchanged
+- tapOn:
+    id: done
+- runFlow:
+    file: subflows/clean-more.yaml
+    env:
+      NAMES: doc.pdf
+      PROFILE: all
+- assertVisible: Verified clean
+- assertVisible: Pages unchanged
+- tapOn:
+    id: done
+- runFlow:
+    file: subflows/keep-outputs.yaml
+    env:
+      VALUE: "off"

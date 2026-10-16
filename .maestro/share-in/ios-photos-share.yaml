@@ -1,0 +1,58 @@
+appId: ${APP_ID}
+name: iOS - a photo shared from Photos opens Safe Share at Inspect with the original HEIC
+tags:
+  - ios-only
+  - share-in
+---
+# Needs scripts/share-in.sh (adds test/fixtures/photo.heic to the simulator's Photos). The app runs first: a development
+# build only routes the extension's link once its bundle is loaded.
+- runFlow: ../subflows/launch.yaml
+- launchApp:
+    appId: com.apple.mobileslideshow
+    stopApp: true
+# First launch of Photos only: welcome sheet and notification question (declined).
+- tapOn:
+    text: Continue
+    optional: true
+- tapOn:
+    text: "Don’t Allow"
+    optional: true
+# Photos reopens the last photo it showed: go back to the library grid first — but only then: when the grid is already
+# shown, "Back" matches the status bar's "◀ Safe Share Dev" link and would return to the app (P6 fix).
+- runFlow:
+    when:
+      notVisible: Library
+    commands:
+      - tapOn:
+          text: Back
+          optional: true
+# A "Sort by Recents" tip can cover the grid after new media arrive (P6): close it.
+- tapOn:
+    text: Close
+    optional: true
+- waitForAnimationToEnd
+# Bring the fixture photo to the middle of the screen (the grid's first row can sit under the "Library" title).
+- scrollUntilVisible:
+    element: "Photo, 14. June 2025, 09:30"
+    direction: UP
+    centerElement: true
+    timeout: 90000
+- tapOn:
+    text: "Photo, 14. June 2025, 09:30"
+    retryTapIfNoChange: true
+- extendedWaitUntil:
+    visible: Share
+    timeout: 15000
+- tapOn: Share
+- tapOn: Safe Share Dev
+# The extension saves the file into the App Group and opens the app (R2); Inspect shows what arrived.
+- extendedWaitUntil:
+    visible:
+      id: inspect-screen
+    timeout: 60000
+- assertVisible:
+    id: inspect-meta
+    text: "HEIC photo.*"
+- assertVisible:
+    id: finding-location
+    text: Exact location

@@ -1,0 +1,9 @@
+{
+  "platforms": ["apple", "android"],
+  "apple": {
+    "modules": ["SafeShareNativeModule"]
+  },
+  "android": {
+    "modules": ["expo.modules.safesharenative.SafeShareNativeModule"]
+  }
+}

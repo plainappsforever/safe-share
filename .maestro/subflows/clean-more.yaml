@@ -1,0 +1,20 @@
+# Like clean-one.yaml but without relaunching (used when a flow chains several files and keeps their outputs).
+appId: ${APP_ID}
+---
+- runFlow: open-link.yaml
+- extendedWaitUntil:
+    visible:
+      id: inspect-screen
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: profile-${PROFILE}
+    timeout: 90000
+- tapOn:
+    id: profile-${PROFILE}
+- tapOn:
+    id: clean
+- extendedWaitUntil:
+    visible:
+      id: result-screen
+    timeout: 120000

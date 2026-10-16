@@ -1,0 +1,13 @@
+# Opens fixtures pushed by scripts/e2e.sh (scripts/push-fixtures.sh) through the dev-only debug deep link, WITHOUT relaunching.
+# Env: NAMES = comma-separated file names in <cache>/debug-in/.
+appId: ${APP_ID}
+---
+- openLink: safeshare-dev://debug/open?names=${NAMES}
+# iOS asks "Open in Safe Share Dev?" for a custom-scheme link from outside the app.
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - tapOn:
+          text: Open
+          optional: true

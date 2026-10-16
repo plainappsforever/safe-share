@@ -1,0 +1,32 @@
+appId: ${APP_ID}
+name: Tool (not in the suite) - record reader-3 output of the ORIGINAL fixtures for test/platform/
+---
+# Run with scripts/e2e.sh <p> development .maestro/tools/record-platform.yaml, then scripts/pull-outputs.sh <p>:
+# every job folder then has platform.json = the phone's reader output for the original file.
+- runFlow: ../subflows/launch.yaml
+- runFlow:
+    file: ../subflows/keep-outputs.yaml
+    env:
+      VALUE: "on"
+- scrollUntilVisible:
+    element:
+      id: inject-platform-on
+    timeout: 90000
+- tapOn:
+    id: inject-platform-on
+- runFlow:
+    file: ../subflows/open-link.yaml
+    env:
+      NAMES: photo.jpg,photo.heic,photo.png,gps.mov,gps.mp4,gps-xyz.mp4,exif.webp,extras.jpg,progressive.jpg,doc.pdf,revised.pdf,flate-xmp.pdf,photo.avif,motion.jpg,ultrahdr.jpg,nometa.jpg,text.png
+- extendedWaitUntil:
+    visible:
+      id: clean-all
+    timeout: 120000
+- tapOn:
+    id: profile-all
+- tapOn:
+    id: clean-all
+- extendedWaitUntil:
+    visible:
+      id: batch-summary
+    timeout: 300000

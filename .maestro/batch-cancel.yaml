@@ -1,0 +1,52 @@
+appId: ${APP_ID}
+name: Cancel in a batch stops within one file and says how many were not cleaned
+tags:
+  - p7
+  - dev-only
+---
+- runFlow: subflows/launch.yaml
+- runFlow:
+    file: subflows/keep-outputs.yaml
+    env:
+      VALUE: "on"
+- scrollUntilVisible:
+    element:
+      id: inject-slow-on
+    timeout: 90000
+- tapOn:
+    id: inject-slow-on
+- runFlow:
+    file: subflows/open-link.yaml
+    env:
+      NAMES: photo.jpg,photo.png,exif.webp,gps.mov,doc.pdf,progressive.jpg
+- extendedWaitUntil:
+    visible:
+      id: clean-all
+    timeout: 120000
+- tapOn:
+    id: profile-all
+- tapOn:
+    id: clean-all
+- extendedWaitUntil:
+    visible:
+      id: batch-progress
+    timeout: 30000
+- extendedWaitUntil:
+    visible: "2 of 6"
+    timeout: 60000
+- tapOn:
+    id: cancel-clean
+- extendedWaitUntil:
+    visible:
+      id: batch-summary
+    timeout: 60000
+- assertVisible: Cancelled
+# One file was being cleaned when Cancel was tapped and was stopped; files not reached stay "not cleaned" (never "clean").
+- assertVisible: ".*not cleaned.*"
+- assertNotVisible: "6 verified clean"
+- assertVisible:
+    id: batch-done
+- tapOn:
+    id: batch-done
+- assertVisible:
+    id: home-screen

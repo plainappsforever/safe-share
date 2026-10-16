@@ -1,0 +1,53 @@
+appId: ${APP_ID}
+name: Release (Android) - a photo shared from the Files app is cleaned, verified by 4 checks and saved
+tags:
+  - android-only
+  - preview-only
+  - release
+---
+# Run on the preview (Release) build: scripts/e2e.sh android preview .maestro/release/android-share-clean.yaml
+# Needs ss-photo.jpg in /sdcard/Pictures (scripts/share-in.sh does it; see V1_LOG P8). No debug link exists in a Release build.
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible:
+      id: home-screen
+    timeout: 90000
+- assertVisible: Safe Share has no internet permission.
+- runFlow: ../subflows/files-open-pictures.yaml
+- longPressOn: ss-photo.jpg
+- tapOn:
+    id: com.google.android.documentsui:id/action_menu_share
+- tapOn: Safe Share Preview
+- extendedWaitUntil:
+    visible:
+      id: inspect-screen
+    timeout: 60000
+- assertVisible:
+    id: finding-location
+    text: Exact location
+- scrollUntilVisible:
+    element:
+      id: profile-all
+- tapOn:
+    id: profile-all
+- tapOn:
+    id: clean
+- extendedWaitUntil:
+    visible:
+      id: result-screen
+    timeout: 120000
+- assertVisible: Verified clean
+- assertVisible: Picture unchanged
+- assertVisible: "Checked 4 ways: .*"
+- tapOn:
+    id: save
+- extendedWaitUntil:
+    visible:
+      id: save-done
+    timeout: 30000
+- assertVisible: Saved to Pictures/Safe Share.
+- tapOn:
+    id: done
+- assertVisible:
+    id: home-screen

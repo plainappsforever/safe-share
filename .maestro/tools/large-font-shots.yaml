@@ -1,0 +1,74 @@
+# NOT part of the suite (P7, A15): screenshots of every screen at the largest font size, to look for clipping.
+# Set the font first (Android: adb -s emulator-5584 shell settings put system font_scale 2.0;
+# iOS: xcrun simctl ui <udid> content_size accessibility-extra-extra-extra-large), run, then reset it.
+appId: ${APP_ID}
+name: Large font screenshots (manual)
+---
+- runFlow: ../subflows/launch.yaml
+- takeScreenshot: font-home
+- runFlow:
+    file: ../subflows/open-link.yaml
+    env:
+      NAMES: photo.jpg
+- extendedWaitUntil:
+    visible:
+      id: inspect-screen
+    timeout: 60000
+- takeScreenshot: font-inspect-top
+- scrollUntilVisible:
+    element:
+      id: profile-camera
+    timeout: 120000
+    visibilityPercentage: 20
+- takeScreenshot: font-inspect-profiles
+- tapOn:
+    id: clean
+- extendedWaitUntil:
+    visible:
+      id: result-screen
+    timeout: 120000
+- takeScreenshot: font-result-top
+- scrollUntilVisible:
+    element:
+      id: timing
+    timeout: 120000
+    visibilityPercentage: 20
+- takeScreenshot: font-result-bottom
+- tapOn:
+    id: done
+- runFlow:
+    file: ../subflows/open-link.yaml
+    env:
+      NAMES: photo.jpg,gps.mov,report.pdf,corrupt.jpg
+- extendedWaitUntil:
+    visible:
+      id: clean-all
+    timeout: 120000
+- takeScreenshot: font-batch-ready
+- tapOn:
+    id: clean-all
+- extendedWaitUntil:
+    visible:
+      id: batch-summary
+    timeout: 120000
+- takeScreenshot: font-batch-summary
+- tapOn:
+    id: batch-done
+- tapOn:
+    id: open-settings
+- takeScreenshot: font-settings-top
+- scrollUntilVisible:
+    element:
+      id: info-privacy
+    timeout: 120000
+    visibilityPercentage: 20
+- takeScreenshot: font-settings-about
+- runFlow:
+    file: ../subflows/open-link.yaml
+    env:
+      NAMES: report.pdf
+- extendedWaitUntil:
+    visible:
+      id: inspect-screen
+    timeout: 60000
+- takeScreenshot: font-inspect-pdf

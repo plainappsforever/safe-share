@@ -1,0 +1,74 @@
+appId: ${APP_ID}
+name: Batch of 12 mixed files ends with 10 verified clean, 1 not supported, 1 failed
+tags:
+  - p4
+---
+- runFlow: subflows/launch.yaml
+- runFlow:
+    file: subflows/keep-outputs.yaml
+    env:
+      VALUE: "on"
+- runFlow:
+    file: subflows/open-link.yaml
+    env:
+      NAMES: photo.jpg,photo.heic,photo.png,gps.mov,gps.mp4,exif.webp,extras.jpg,progressive.jpg,doc.pdf,revised.pdf,voice.m4a,corrupt.jpg
+- extendedWaitUntil:
+    visible:
+      id: batch-screen
+    timeout: 60000
+- extendedWaitUntil:
+    visible:
+      id: clean-all
+    timeout: 120000
+- tapOn:
+    id: profile-all
+- tapOn:
+    id: clean-all
+- extendedWaitUntil:
+    visible:
+      id: batch-done
+    timeout: 300000
+- scrollUntilVisible:
+    element: 10 verified clean · 1 not supported · 1 failed
+    direction: UP
+    timeout: 90000
+# a row opens its result and comes back
+- scrollUntilVisible:
+    element:
+      id: row-photo.heic
+    timeout: 90000
+- tapOn:
+    id: row-photo.heic
+- extendedWaitUntil:
+    visible:
+      id: result-screen
+    timeout: 20000
+- assertVisible: Verified clean
+- tapOn:
+    id: done
+- scrollUntilVisible:
+    element: 10 verified clean · 1 not supported · 1 failed
+    direction: UP
+    timeout: 90000
+- scrollUntilVisible:
+    element:
+      id: row-voice.m4a
+    timeout: 90000
+- tapOn:
+    id: row-voice.m4a
+- extendedWaitUntil:
+    visible:
+      id: result-screen
+    timeout: 20000
+- assertVisible: Not supported yet — not changed
+- assertNotVisible: Verified clean
+- tapOn:
+    id: done
+- tapOn:
+    id: batch-done
+- assertVisible:
+    id: home-screen
+- runFlow:
+    file: subflows/keep-outputs.yaml
+    env:
+      VALUE: "off"

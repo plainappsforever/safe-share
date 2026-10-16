@@ -1,0 +1,147 @@
+appId: ${APP_ID}
+name: Could not verify and Not fully clean both warn before sharing (Share anyway)
+tags:
+  - p7
+  - dev-only
+---
+# A. "Could not verify" from a real code path: the phone's own reader cannot read the copy (dev switch), so the
+#    result is amber, names the reason, and Share / Save ask first.
+- runFlow: subflows/launch.yaml
+- tapOn:
+    id: open-settings
+- scrollUntilVisible:
+    element:
+      id: inject-error-on
+    timeout: 90000
+- tapOn:
+    id: inject-error-on
+- assertVisible:
+    id: inject-error-on
+    selected: true
+- runFlow:
+    file: subflows/open-link.yaml
+    env:
+      NAMES: photo.jpg
+- extendedWaitUntil:
+    visible:
+      id: inspect-screen
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: profile-all
+    timeout: 90000
+- tapOn:
+    id: profile-all
+- tapOn:
+    id: clean
+- extendedWaitUntil:
+    visible:
+      id: result-screen
+    timeout: 120000
+- assertVisible: Could not verify
+- assertNotVisible: Verified clean
+- assertVisible: "Safe Share could not confirm that this copy is clean:"
+- assertVisible: "• The phone.s own reader .* could not read the copy"
+- assertVisible: Share anyway…
+- tapOn:
+    id: share
+- assertVisible: Share anyway?
+- assertVisible: Safe Share could not verify this copy. Share anyway?
+# Cancel: nothing is shared
+- tapOn: "(?i)cancel"
+- assertNotVisible: Safe Share could not verify this copy. Share anyway?
+- assertNotVisible:
+    id: share-status
+- tapOn:
+    id: save
+- assertVisible: Save anyway?
+- tapOn: "(?i)cancel"
+- assertNotVisible: Save anyway?
+# Share: only after the warning, the system share sheet opens with the copy
+- tapOn:
+    id: share
+- tapOn: "(?i)share"
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - extendedWaitUntil:
+          visible: Copy
+          timeout: 60000
+      - assertVisible: "photo-[A-Z0-9]{4}"
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - extendedWaitUntil:
+          visible: "Sharing .*"
+          timeout: 60000
+
+# B. A real PDF whose metadata sits in a stream the engine cannot decode (hexstm.pdf): never green. iOS: PDFKit still
+#    sees the values -> Not fully clean. Android has no PDF reader -> Could not verify.
+- runFlow: subflows/launch.yaml
+- runFlow:
+    file: subflows/open-link.yaml
+    env:
+      NAMES: hexstm.pdf
+- extendedWaitUntil:
+    visible:
+      id: inspect-screen
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: profile-all
+    timeout: 90000
+- tapOn:
+    id: profile-all
+- tapOn:
+    id: clean
+- extendedWaitUntil:
+    visible:
+      id: result-screen
+    timeout: 120000
+- assertNotVisible: Verified clean
+- assertVisible: Share anyway…
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - assertVisible: Could not verify
+      - assertVisible: "• Could not check: compressed object stream"
+
+# C. "Not fully clean": report.pdf keeps a comment author and an attached file (reported, not removed).
+- runFlow: subflows/launch.yaml
+- runFlow:
+    file: subflows/open-link.yaml
+    env:
+      NAMES: report.pdf
+- extendedWaitUntil:
+    visible:
+      id: inspect-screen
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: profile-all
+    timeout: 90000
+- tapOn:
+    id: profile-all
+- tapOn:
+    id: clean
+- extendedWaitUntil:
+    visible:
+      id: result-screen
+    timeout: 120000
+- assertVisible: Not fully clean
+- tapOn:
+    id: share
+- assertVisible: Share anyway?
+- assertVisible: "This copy still contains: .*Comment author.*"
+- tapOn: "(?i)cancel"
+- assertNotVisible: Share anyway?
+- assertNotVisible:
+    id: share-status
+- tapOn:
+    id: save
+- assertVisible: Save anyway?
+- tapOn: "(?i)cancel"
+- assertNotVisible: Save anyway?

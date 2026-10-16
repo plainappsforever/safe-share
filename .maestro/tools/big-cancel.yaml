@@ -1,0 +1,63 @@
+# NOT part of the normal suite (P7 proof, run by hand): a 300 MiB MP4 keeps the UI alive while it is cleaned.
+# Run with: maestro --device <id> test -e APP_ID=<dev id> -e BIG=big300.mp4 (the file must be pushed first)
+# Push first: scripts/push-fixtures.sh <p> <scratch>/big300.mp4 (node scripts/fixtures/make-big-mp4.mjs <out> 300), then
+# scripts/e2e.sh <p> development .maestro/tools/big-cancel.yaml and scripts/pull-outputs.sh <p> (job.json: ms, maxLagMs).
+appId: ${APP_ID}
+name: Big file (manual) - progress moves, Cancel works mid-clean, then a full clean
+---
+- runFlow: ../subflows/launch.yaml
+- runFlow:
+    file: ../subflows/keep-outputs.yaml
+    env:
+      VALUE: "on"
+- runFlow:
+    file: ../subflows/open-link.yaml
+    env:
+      NAMES: ${BIG}
+- extendedWaitUntil:
+    visible:
+      id: inspect-screen
+    timeout: 120000
+- tapOn:
+    id: profile-all
+- tapOn:
+    id: clean
+# The bar is on screen and moves: a low value, then a higher one, while the file is still being checked.
+- extendedWaitUntil:
+    visible:
+      id: clean-progress
+    timeout: 30000
+- extendedWaitUntil:
+    visible: "Checking the copy… \\d %|Checking the copy… 1\\d %"
+    timeout: 30000
+- extendedWaitUntil:
+    visible: "Checking the copy… [2-5]\\d %"
+    timeout: 30000
+- tapOn:
+    id: cancel-clean
+- extendedWaitUntil:
+    visible:
+      id: cancelled-note
+    timeout: 30000
+- assertVisible: Cancelled. Nothing was kept.
+- assertNotVisible:
+    id: result-screen
+# A second clean of the same file runs to the end.
+- tapOn:
+    id: clean
+- extendedWaitUntil:
+    visible:
+      id: result-screen
+    timeout: 300000
+- assertVisible: Verified clean
+- assertVisible: Video and sound unchanged
+- scrollUntilVisible:
+    element:
+      id: timing
+    timeout: 90000
+- tapOn:
+    id: done
+- runFlow:
+    file: ../subflows/keep-outputs.yaml
+    env:
+      VALUE: "off"

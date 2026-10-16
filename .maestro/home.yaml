@@ -1,0 +1,24 @@
+appId: ${APP_ID}
+name: Home shows the two picker buttons, the privacy line and Settings
+tags:
+  - smoke
+---
+- runFlow: subflows/launch.yaml
+- assertVisible:
+    id: pick-photos
+    enabled: true
+- assertVisible: Photos & videos
+- assertVisible:
+    id: pick-files
+    enabled: true
+- assertVisible: Files
+- assertVisible:
+    id: privacy-line
+- assertVisible: Nothing leaves your phone.
+# A13: no onboarding, no permission prompt at launch
+- assertNotVisible: Allow
+- assertNotVisible: Don’t Allow
+- tapOn:
+    id: open-settings
+- assertVisible:
+    id: settings-screen

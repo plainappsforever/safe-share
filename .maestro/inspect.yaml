@@ -1,0 +1,50 @@
+appId: ${APP_ID}
+name: Inspect shows what photo.jpg says about you
+tags:
+  - p4
+---
+- runFlow:
+    file: subflows/open-files.yaml
+    env:
+      NAMES: photo.jpg
+- extendedWaitUntil:
+    visible:
+      id: inspect-screen
+    timeout: 60000
+- assertVisible: photo.jpg
+- assertVisible: Exact location
+- scrollUntilVisible:
+    element: Phone model and serial number
+    timeout: 60000
+- scrollUntilVisible:
+    element: Date and time taken
+    timeout: 60000
+- scrollUntilVisible:
+    element: Your name / copyright
+    timeout: 60000
+# Profile descriptions say that partial profiles also remove unknown fields, thumbnails, maker notes, HDR / Motion-Photo data (P2-1)
+- scrollUntilVisible:
+    element: Remove everything.*
+    speed: 20
+    timeout: 60000
+- scrollUntilVisible:
+    element: Location only.*maker notes and HDR / Motion-Photo data.*
+    speed: 20
+    timeout: 60000
+- scrollUntilVisible:
+    element: Keep camera settings.*
+    speed: 20
+    timeout: 90000
+- scrollUntilVisible:
+    element:
+      id: show-on-map
+    timeout: 90000
+- scrollUntilVisible:
+    element: "Latitude: .*"
+    timeout: 90000
+- scrollUntilVisible:
+    element: "Camera serial number: .*"
+    timeout: 90000
+# the primary action stays visible without scrolling (A9)
+- assertVisible:
+    id: clean-share

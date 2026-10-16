@@ -1,0 +1,5 @@
+# Fresh launch (absolute starting state), then open fixtures through the debug deep link. Env: NAMES.
+appId: ${APP_ID}
+---
+- runFlow: launch.yaml
+- runFlow: open-link.yaml

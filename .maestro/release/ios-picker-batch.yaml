@@ -1,0 +1,57 @@
+appId: ${APP_ID}
+name: Release (iOS) - a photo and a video from the system picker are cleaned as a batch
+tags:
+  - ios-only
+  - preview-only
+  - release
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible:
+      id: home-screen
+    timeout: 90000
+- tapOn:
+    id: pick-photos
+- scrollUntilVisible:
+    element: "Photo, 14. June 2025, 09:30"
+    direction: UP
+    timeout: 20000
+    optional: true
+- scrollUntilVisible:
+    element: "Photo, 14. June 2025, 09:30"
+    direction: DOWN
+    timeout: 20000
+    optional: true
+- tapOn: "Photo, 14. June 2025, 09:30"
+- scrollUntilVisible:
+    element: "Video, two seconds, 14. June 2025, 09:30"
+    direction: UP
+    timeout: 20000
+    optional: true
+- scrollUntilVisible:
+    element: "Video, two seconds, 14. June 2025, 09:30"
+    direction: DOWN
+    timeout: 20000
+    optional: true
+- tapOn: "Video, two seconds, 14. June 2025, 09:30"
+- tapOn: Done
+- extendedWaitUntil:
+    visible:
+      id: batch-screen
+    timeout: 60000
+- extendedWaitUntil:
+    visible:
+      id: clean-all
+    timeout: 60000
+- tapOn:
+    id: profile-all
+- tapOn:
+    id: clean-all
+- extendedWaitUntil:
+    visible: 2 verified clean
+    timeout: 120000
+- tapOn:
+    id: batch-done
+- assertVisible:
+    id: home-screen

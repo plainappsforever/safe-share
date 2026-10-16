@@ -1,0 +1,50 @@
+appId: ${APP_ID}
+name: PDF findings are honest - earlier versions, comment authors and attachments are reported, not hidden
+tags:
+  - p4
+---
+- runFlow:
+    file: subflows/clean-one.yaml
+    env:
+      NAMES: revised.pdf
+      PROFILE: all
+- assertVisible: Verified clean
+- assertVisible: Pages unchanged
+# D11/P6: iOS checks PDFs with PDFKit (4 checks); Android has no platform PDF reader and says so (3 checks).
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - assertVisible: "Checked 4 ways: .*PDFKit.*"
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - assertVisible: "Checked 3 ways.*Android has no built-in reader for PDF details.*"
+- scrollUntilVisible:
+    element: .*can still be inside the file.*
+    timeout: 90000
+- assertVisible: .*pages that were changed or deleted in earlier versions.*
+- tapOn:
+    id: done
+
+- runFlow:
+    file: subflows/clean-one.yaml
+    env:
+      NAMES: report.pdf
+      PROFILE: all
+- assertVisible: Not fully clean
+- assertVisible: "This copy still contains:"
+- assertVisible: .*Comment author.*
+- assertVisible: .*Attached file.*
+- assertNotVisible: Verified clean
+- scrollUntilVisible:
+    element: .*does not remove comment authors, attached files.*
+    timeout: 90000
+# The survivor lines now name their readers (P6), so the notes can sit lower on a small screen.
+- scrollUntilVisible:
+    element: .*digitally signed.*
+    timeout: 90000
+- assertVisible:
+    id: share
+- assertVisible: Share anyway…

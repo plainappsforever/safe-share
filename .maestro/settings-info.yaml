@@ -1,0 +1,122 @@
+appId: ${APP_ID}
+name: Settings - default profile, file names and the four information pages
+tags:
+  - p7
+---
+- runFlow: subflows/launch.yaml
+- tapOn:
+    id: open-settings
+- assertVisible: "Default: what to remove"
+# Default profile: choose "Location only" here, Inspect opens with it
+- tapOn:
+    id: profile-location
+- assertVisible:
+    id: profile-location
+    selected: true
+# File names: keep the original name, see it on the result (development builds print the output name)
+- scrollUntilVisible:
+    element:
+      id: names-original
+    timeout: 90000
+- tapOn:
+    id: names-original
+- assertVisible:
+    id: names-original
+    selected: true
+- runFlow: subflows/back.yaml
+- runFlow:
+    file: subflows/open-link.yaml
+    env:
+      NAMES: photo.jpg
+- extendedWaitUntil:
+    visible:
+      id: inspect-screen
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: profile-location
+    timeout: 90000
+- assertVisible:
+    id: profile-location
+    selected: true
+- tapOn:
+    id: clean
+- extendedWaitUntil:
+    visible:
+      id: result-screen
+    timeout: 120000
+- scrollUntilVisible:
+    element:
+      id: timing
+    timeout: 90000
+- assertVisible: "output photo\\.jpg .*"
+- assertNotVisible: "output photo-.*"
+- tapOn:
+    id: done
+# Put both settings back (defaults) and read the four pages
+- tapOn:
+    id: open-settings
+- tapOn:
+    id: profile-all
+- scrollUntilVisible:
+    element:
+      id: names-neutral
+    timeout: 90000
+- tapOn:
+    id: names-neutral
+- assertVisible:
+    id: names-neutral
+    selected: true
+- scrollUntilVisible:
+    element:
+      id: info-removes
+    timeout: 90000
+- tapOn:
+    id: info-removes
+- assertVisible:
+    id: info-removes-screen
+- assertVisible: Photos, videos and PDFs carry hidden data.*
+- scrollUntilVisible:
+    element: What no tool like this can do
+    timeout: 90000
+- assertNotVisible: ".*100 ?%.*"
+- runFlow: subflows/back.yaml
+- scrollUntilVisible:
+    element:
+      id: info-apps
+    timeout: 90000
+- tapOn:
+    id: info-apps
+- assertVisible:
+    id: info-apps-screen
+- assertVisible: Sometimes. You cannot rely on it.*
+- scrollUntilVisible:
+    element: ".*E-mail attachments"
+    timeout: 90000
+- runFlow: subflows/back.yaml
+- scrollUntilVisible:
+    element:
+      id: info-privacy
+    timeout: 90000
+- tapOn:
+    id: info-privacy
+- assertVisible:
+    id: info-privacy-screen
+- scrollUntilVisible:
+    element: No data collected
+    timeout: 90000
+- assertVisible: No account, no ads, no analytics.*
+- assertNotVisible: ".*100 ?%.*"
+- runFlow: subflows/back.yaml
+- scrollUntilVisible:
+    element:
+      id: info-licences
+    timeout: 90000
+- tapOn:
+    id: info-licences
+- assertVisible:
+    id: info-licences-screen
+- assertVisible: metadata-extractor.*
+- scrollUntilVisible:
+    element: "pako.*"
+    timeout: 90000

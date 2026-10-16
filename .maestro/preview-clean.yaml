@@ -1,0 +1,51 @@
+appId: ${APP_ID}
+name: Release build - a photo from the Files picker is cleaned and verified by 4 checks (R8, no internet permission)
+tags:
+  - p7
+  - android-only
+  - preview-only
+---
+# The release build has no debug deep link, so the file comes in the way a user does it: Home -> Files -> system picker.
+# Prepare: adb -s emulator-5584 push test/fixtures/photo.jpg /sdcard/Pictures/ss-photo.jpg (+ media scan, as scripts/share-in.sh).
+# P6-3: reader 3 (metadata-extractor + xmpcore) must still run in the minified release build.
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible:
+      id: home-screen
+    timeout: 90000
+- assertVisible: Safe Share has no internet permission.
+- tapOn:
+    id: pick-files
+- scrollUntilVisible:
+    element: ss-photo.jpg
+    timeout: 30000
+- tapOn: ss-photo.jpg
+- tapOn:
+    text: Select
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: inspect-screen
+    timeout: 60000
+- assertVisible:
+    id: finding-location
+    text: Exact location
+- scrollUntilVisible:
+    element:
+      id: profile-all
+- tapOn:
+    id: profile-all
+- tapOn:
+    id: clean
+- extendedWaitUntil:
+    visible:
+      id: result-screen
+    timeout: 120000
+- assertVisible: Verified clean
+- assertVisible: Picture unchanged
+- assertVisible: "Checked 4 ways: .* phone.s own reader \\(metadata-extractor\\).*"
+- tapOn:
+    id: done
+- assertVisible:
+    id: home-screen

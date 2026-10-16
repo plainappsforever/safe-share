@@ -1,0 +1,21 @@
+# Flows share one simulator and one database, so run them sequentially in this order (by flow name).
+# Every flow sets up the state it needs through the UI and never relies on another flow.
+flows:
+  - "*"
+executionOrder:
+  continueOnFailure: true
+  flowsOrder:
+    - "Home shows the two picker buttons, the privacy line and Settings"
+    - "FS self-test writes 10 bytes at offset 5 and reads them back"
+    - "Settings - dark mode survives a restart"
+    - "Inspect shows what photo.jpg says about you"
+    - "Clean photo.jpg with Remove everything shows Verified clean and Picture unchanged"
+    - "Location only keeps the date and time, and says what else is removed"
+    - "Clean and share goes from Inspect to the share sheet in one tap"
+    - "Unsupported, damaged and password-protected files are declined and never called clean"
+    - "PDF findings are honest - earlier versions, comment authors and attachments are reported, not hidden"
+    - "HEIC, MOV, MP4 and PDF go through the whole flow to Verified clean"
+    - "Batch of 12 mixed files ends with 10 verified clean, 1 not supported, 1 failed"
+    - "Batch of 50 mixed files ends with 48 verified clean, 1 not supported, 1 failed"
+    - "Done deletes the cleaned copy (work folder empty)"
+    - "Save puts the cleaned photo and video in Photos or Pictures/Safe Share"

@@ -1,0 +1,16 @@
+# .oss-scrub-allow - findings of scripts/oss/scrub-check.sh that a human checked and accepts (public file, no values).
+# Reviewed 2026-10-16 for the first public source release.
+I-GPS test/fixtures/*.jpg                # generated metadata fixtures (Berlin centre / Eiffel Tower) to test GPS removal
+I-GPS test/android/*.jpg                 # picker-redacted test image (GPS 0,0)
+I-CAMERA test/fixtures/*.jpg             # made-up camera make/models "FixtureCam", "ExtrasCam"
+I-CAMERA test/android/*.jpg              # made-up camera make/model "FixtureCam FC-1"
+P-EMAIL src/lib/licences.generated.ts    # authors' addresses in third-party licence notices
+P-FIRSTNAME test/review-v15.test.ts      # made-up metadata strings the cleaner must remove
+P-USERPATH test/review-v15.test.ts       # made-up /Users/example path the cleaner must remove
+P-PKGID README.md                 # placeholder app id com.tim.*: the identifier changes before the first store release
+P-PKGID app.config.ts             # placeholder app id com.tim.*: the identifier changes before the first store release
+P-PKGID fdroid/*                  # placeholder app id com.tim.*: the identifier changes before the first store release
+P-PKGID scripts/pull-outputs.sh   # placeholder app id com.tim.*: the identifier changes before the first store release
+P-PKGID scripts/push-fixtures.sh  # placeholder app id com.tim.*: the identifier changes before the first store release
+P-PKGID scripts/share-in.sh       # placeholder app id com.tim.*: the identifier changes before the first store release
+P-PKGID src/lib/files.test.ts     # placeholder app id com.tim.*: the identifier changes before the first store release

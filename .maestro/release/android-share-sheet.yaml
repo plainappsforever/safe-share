@@ -1,0 +1,27 @@
+appId: ${APP_ID}
+name: Release (Android) - Clean & share goes from a shared photo to the system share sheet in one tap
+tags:
+  - android-only
+  - preview-only
+  - release
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible:
+      id: home-screen
+    timeout: 90000
+- runFlow: ../subflows/files-open-pictures.yaml
+- longPressOn: ss-photo.jpg
+- tapOn:
+    id: com.google.android.documentsui:id/action_menu_share
+- tapOn: Safe Share Preview
+- extendedWaitUntil:
+    visible:
+      id: inspect-screen
+    timeout: 60000
+- tapOn:
+    id: clean-share
+- extendedWaitUntil:
+    visible: Sharing image
+    timeout: 60000

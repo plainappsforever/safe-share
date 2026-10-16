@@ -1,0 +1,20 @@
+# Env: NAMES (one file), PROFILE = all | location | camera. Opens the file, chooses the profile, taps Clean and waits for the verdict.
+appId: ${APP_ID}
+---
+- runFlow: open-files.yaml
+- extendedWaitUntil:
+    visible:
+      id: inspect-screen
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: profile-${PROFILE}
+    timeout: 90000
+- tapOn:
+    id: profile-${PROFILE}
+- tapOn:
+    id: clean
+- extendedWaitUntil:
+    visible:
+      id: result-screen
+    timeout: 120000

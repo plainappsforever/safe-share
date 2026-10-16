@@ -1,0 +1,27 @@
+appId: ${APP_ID}
+name: Batch of 50 mixed files ends with 48 verified clean, 1 not supported, 1 failed
+tags:
+  - p7
+---
+# A10: 50 files (repeats of the 10 clean fixtures, plus one unsupported audio file and one damaged JPEG): exact counts, one at a time.
+- runFlow: subflows/launch.yaml
+- runFlow:
+    file: subflows/open-link.yaml
+    env:
+      NAMES: photo.jpg,photo.heic,photo.png,gps.mov,gps.mp4,exif.webp,extras.jpg,progressive.jpg,doc.pdf,revised.pdf,photo.jpg,photo.heic,photo.png,gps.mov,gps.mp4,exif.webp,extras.jpg,progressive.jpg,doc.pdf,revised.pdf,photo.jpg,photo.heic,photo.png,gps.mov,gps.mp4,exif.webp,extras.jpg,progressive.jpg,doc.pdf,revised.pdf,photo.jpg,photo.heic,photo.png,gps.mov,gps.mp4,exif.webp,extras.jpg,progressive.jpg,doc.pdf,revised.pdf,photo.jpg,photo.heic,photo.png,gps.mov,gps.mp4,exif.webp,extras.jpg,progressive.jpg,voice.m4a,corrupt.jpg
+- extendedWaitUntil:
+    visible:
+      id: clean-all
+    timeout: 300000
+- tapOn:
+    id: profile-all
+- tapOn:
+    id: clean-all
+- extendedWaitUntil:
+    visible: 48 verified clean · 1 not supported · 1 failed
+    timeout: 900000
+- assertNotVisible: Cancelled
+- tapOn:
+    id: batch-done
+- assertVisible:
+    id: home-screen
